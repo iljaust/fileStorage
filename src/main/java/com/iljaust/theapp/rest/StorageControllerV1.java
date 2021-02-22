@@ -1,31 +1,31 @@
 package com.iljaust.theapp.rest;
 
-import com.iljaust.theapp.model.Event;
 import com.iljaust.theapp.model.User;
 import com.iljaust.theapp.service.StorageService;
 import com.iljaust.theapp.service.UserService;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
 @RestController
-@RequestMapping("/api/v1/file")
+@RequestMapping("/file")
 public class StorageControllerV1 {
 
+    @Autowired
     private StorageService service;
-    private UserService userService;
 
-
-    public StorageControllerV1(StorageService service, UserService userService) {
-        this.service = service;
-        this.userService = userService;
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file, User user) {
+        return new ResponseEntity<>(service.uploadFile(user,file), HttpStatus.OK);
     }
 
-
-    @GetMapping("/{fileName}")
+    @GetMapping("/download/{fileName}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
         byte[] data = service.downloadFile(fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
@@ -40,12 +40,6 @@ public class StorageControllerV1 {
     @DeleteMapping("/delete/{fileName}")
     public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
         return new ResponseEntity<>(service.deleteFile(fileName), HttpStatus.OK);
-    }
-
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") File file) {
-        User user = userService.findById((long)1);
-        return new ResponseEntity<>(service.uploadFile(user,file), HttpStatus.OK);
     }
 
 

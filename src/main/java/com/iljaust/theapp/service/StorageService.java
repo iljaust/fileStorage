@@ -3,18 +3,21 @@ package com.iljaust.theapp.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import com.iljaust.theapp.dto.FileDto;
 import com.iljaust.theapp.model.Event;
 import com.iljaust.theapp.model.EventAction;
 import com.iljaust.theapp.model.FileStatus;
 import com.iljaust.theapp.model.User;
 import com.iljaust.theapp.repository.EventRepository;
-import org.apache.commons.io.IOUtils;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.time.LocalDateTime;
+
 
 @Service
 public class StorageService {
@@ -61,10 +64,11 @@ public class StorageService {
         return fileName + " removed ...";
     }
 
-    public String uploadFile(User user,File file) {
+    public String uploadFile(User user,MultipartFile file) {
+        File fileObj = convertMultiPartFileToFile(file);
 
-        s3Client.putObject(bucketName, file.getName(), file);
-        FileDto fileDto = fromFileIO(user,file,FileStatus.ACTIVE);
+        s3Client.putObject(bucketName, file.getName(), fileObj);
+        FileDto fileDto = fromFileIO(user,fileObj,FileStatus.ACTIVE);
         fileService.save(fileDto);
         Event event = fromFileDto(fileDto, EventAction.UPLOAD);
         eventRepository.save(event);
@@ -100,6 +104,17 @@ public class StorageService {
         return event;
 
     }
+
+    private File convertMultiPartFileToFile(MultipartFile file) {
+        File convertedFile = new File(file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+            fos.write(file.getBytes());
+        } catch (IOException e) {
+            e.getCause();
+        }
+        return convertedFile;
+    }
+
 
 
 

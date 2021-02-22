@@ -19,19 +19,14 @@ public class User {
     @Column(name = "id")
     private Long id;
     @Column(name = "username")
-    @NotBlank(message = "Username is mandatory")
     private String username;
     @Column(name = "first_name")
-    @NotBlank(message = "First name is mandatory")
     private String firstName;
     @Column(name = "last_name")
-    @NotBlank(message = "Last name is mandatory")
     private String secondName;
     @Column(name = "phone_number")
-    @NotBlank(message = "Phone number name is mandatory")
     private String phoneNumber;
     @Column(name = "password")
-    @NotBlank(message = "Password number name is mandatory")
     private String password;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")

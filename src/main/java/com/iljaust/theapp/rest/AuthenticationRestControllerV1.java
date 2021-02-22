@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @Data
@@ -28,7 +29,7 @@ public class AuthenticationRestControllerV1 {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody User user) {
+    public ResponseEntity signup(@RequestBody @Valid User user) {
 
           if(authenticationService.signup(user) ==null)
               throw new BadCredentialsException("Username or phone number already exist");

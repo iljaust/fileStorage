@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api/v1/users/")
+@RequestMapping(value = "/api/v1/users")
 public class UserRestControllerV1 {
     private final UserService userService;
 
@@ -35,7 +35,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity(usersDto, HttpStatus.OK);
     }
 
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id) {
         User user = userService.findById(id);
 
@@ -48,7 +48,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Long id) {
         User user = this.userService.findById(id);
 
@@ -61,7 +61,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping(value = "/update")
+    @PutMapping
     public ResponseEntity<UserDto> updateUser(@RequestBody @Valid User user) {
 
         if (user == null) {

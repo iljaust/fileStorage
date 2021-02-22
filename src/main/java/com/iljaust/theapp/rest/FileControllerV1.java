@@ -21,7 +21,7 @@ public class FileControllerV1 {
         this.fileService = fileService;
     }
 
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<FileDto> getDeveloper(@PathVariable("id") Long fileID) {
         File file  = fileService.findById(fileID);
 

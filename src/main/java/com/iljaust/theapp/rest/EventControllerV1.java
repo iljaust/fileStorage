@@ -26,7 +26,7 @@ public class EventControllerV1 {
         }
 
         @GetMapping
-        public ResponseEntity<List<Event>> getAllUsers() {
+        public ResponseEntity<List<Event>> getAllEvents() {
             List<Event> events = this.eventService.getAll();
 
             if (events.isEmpty()) {
@@ -41,7 +41,7 @@ public class EventControllerV1 {
         }
 
         @GetMapping(value = "{id}")
-        public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id) {
+        public ResponseEntity<UserDto> getEventById(@PathVariable(name = "id") Long id) {
             Event event = eventService.findById(id);
 
             if (event == null) {
@@ -54,14 +54,14 @@ public class EventControllerV1 {
         }
 
         @DeleteMapping(value = "{id}")
-        public ResponseEntity<UserDto> deleteUser(@PathVariable("id") Event event) {
+        public ResponseEntity<UserDto> deleteEvent(@PathVariable("id") Event event) {
             this.eventService.delete(event);
 
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
         @PutMapping(value = "/update")
-        public ResponseEntity<UserDto> updateUser(@RequestBody @Valid Event event) {
+        public ResponseEntity<UserDto> updateEvent(@RequestBody @Valid Event event) {
 
             if (event == null) {
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
